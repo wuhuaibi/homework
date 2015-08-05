@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task2</title>
+	<style>
+		body{
+			margin-bottom: 50px;
+		}
+		p,h3,ul,form{
+			margin-left: 50px;
+		}
+		pre{
+			font-size: 16px;
+		}
+	</style>
+	<script type="text/javascript" src="task2.js"></script>
+</head>
+<body>
+	<div>
+		<h2>1.闭包总结笔记</h2>
+		<p>闭包就是在一个函数内部包含了一个函数，且内部函数中有包含函数的变量，</p>
+		<p>这样使得包含函数的该变量的内存不会在调用后被释放。</p>
+	</div>	
+	<div>
+		<h2>2.this指针总结笔记</h2>
+		<p>一般而言，this指向函数执行时的当前对象。</p>
+		<p>当没有明确的执行时的当前对象时，this指向全局对象window。</p>
+		<p>在浏览器中setTimeout、setInterval和匿名函数执行时的当前对象是全局对象window，这条我们可以看成是上一条的一个特殊情况。</p>
+		<p>apply和call能够强制改变函数执行时的当前对象，让this指向其他对象。</p>
+	</div>	
+	<div>
+		<h2>3.构造能兼容所有浏览器的事件绑定/事件移除/取消默认事件的函数</h2>
+		<pre>
+	var EventUtil = {
+		
+		addHandler: function(element, type, handler) {				//事件绑定函数				
+			if (element.addEventListener) {
+				element.addEventListener(type, handler,false); 
+			} else if (element.attachEvent) {
+				element.attachEvent("on" + type, handler);
+			} else {
+				element["on" + type] = null;
+			}
+		},
+
+		getEvent: function(event) {
+			return event ? event : window.event;
+		},
+
+		getTarget: function(event) {
+			return event.target || event.srcElement;
+		},
+
+		preventDefault: function(event) {					//取消事件的默认行为
+			if (event.preventDefault) {
+				event.preventDefault();
+			} else {
+				event.returnValue = false;
+			}
+		},
+
+		removeHandler: function(element, type, handler) {			//事件移除函数
+			if (element.removeEventListener) {
+				element.removeEventListener(type, handler, false);
+			} else if (element.detachEvent) {
+				element.detachEvent("on" + type, handler);
+			} else {
+				element["on" + type] = null;
+			}
+		},
+ 
+ 		stopPropagation: function(event) {					//组织事件冒泡
+			if(event.stopPropagation) {
+				event.stopPropagation();
+			} else {
+				event.cancelBubble = true;
+			}
+ 		}
+	};
+		</pre>
+	</div>
+	<div>
+		<h2>4.构造能实现简单id/class/tag选取的$()方法</h2>
+		<pre>
+	var $ = function(e){
+		var pattern1 = new RegExp("#","g");
+		var pattern2 = new RegExp("\\.","g");
+		if (pattern1.test(e)) {
+			var id = document.getElementById("e");
+			return id;
+		} else if (pattern2.test(e)) {
+ 			var class = document.getElementByClassName("e");
+ 			return class;
+		} else {
+			var tag = document.getElementsByTagName("e");
+			return tag;
+		} 
+	};
+		</pre>
+	</div>
+	<div>
+		<h2>5.编写一个能够区分各种浏览器的函数</h2>
+		<h3>Rendering Engines</h3>
+	    <ul>
+	        <li>client.engine.ie = <script>document.write(client.engine.ie);</script></li>
+	        <li>client.engine.webkit = <script>document.write(client.engine.webkit);</script></li>
+	        <li>client.engine.gecko = <script>document.write(client.engine.gecko);</script></li>
+	        <li>client.engine.khtml = <script>document.write(client.engine.khtml);</script></li>
+	        <li>client.engine.opera = <script>document.write(client.engine.opera);</script></li>
+	        <li>client.engine.ver = <script>document.write(client.engine.ver);</script></li>
+
+	    </ul>
+	    <h3>Browsers</h3>
+	    <ul>
+	        <li>client.browser.ie = <script>document.write(client.browser.ie);</script></li>
+	        <li>client.browser.safari = <script>document.write(client.browser.safari);</script></li>
+	        <li>client.browser.firefox = <script>document.write(client.browser.firefox);</script></li>
+	        <li>client.browser.konq = <script>document.write(client.browser.konq);</script></li>
+	        <li>client.browser.opera = <script>document.write(client.browser.opera);</script></li>
+	        <li>client.browser.chrome = <script>document.write(client.browser.chrome);</script></li>
+	        <li>client.browser.ver = <script>document.write(client.browser.ver);</script></li>
+	    </ul>
+	    <h3>System</h3>
+	    <ul>
+	        <li>client.system.win = <script>document.write(client.system.win);</script></li>
+	        <li>client.system.mac = <script>document.write(client.system.mac);</script></li>
+	        <li>client.system.x11 = <script>document.write(client.system.x11);</script></li>
+	        <li>client.system.iphone = <script>document.write(client.system.iphone);</script></li>
+	        <li>client.system.ipod = <script>document.write(client.system.ipod);</script></li>
+	        <li>client.system.ipad = <script>document.write(client.system.ipad);</script></li>
+	        <li>client.system.ios = <script>document.write(client.system.ios);</script></li>
+	        <li>client.system.android = <script>document.write(client.system.android);</script></li>
+	        <li>client.system.nokiaN = <script>document.write(client.system.nokiaN);</script></li>
+	        <li>client.system.winMobile = <script>document.write(client.system.winMobile);</script></li>
+	        <li>client.system.wii = <script>document.write(client.system.wii);</script></li>
+	        <li>client.system.ps = <script>document.write(client.system.ps);</script></li>    
+	    </ul>  
+	</div>
+	<div>
+		<h2>6.利用正则表达式进行表单验证</h2>
+		<form action="">
+			请输入您的QQ号码：<input type="text" id="qq">	<input type="submit" id="submit">
+		</form>
+	</div>
+</body>
+</html>
